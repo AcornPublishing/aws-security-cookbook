@@ -1,0 +1,28 @@
+aws iam create-policy \
+    --policy-name S3CRR_POLICY_AWSSECCOOKBOOK_TO_AWSSECCOOKBOOKBACKUPMUMBAI \
+    --policy-document file://resources/replication-permissions-policy-other-account.json \
+    --profile awssecadmin
+
+aws iam create-role \
+    --role-name S3CRR_ROLE_AWSSECCOOKBOOK_TO_AWSSECCOOKBOOKBACKUPMUMBAI \
+    --assume-role-policy-document file://resources/assume-role-policy.json \
+    --profile awssecadmin
+
+aws iam attach-role-policy \
+    --role-name S3CRR_ROLE_AWSSECCOOKBOOK_TO_AWSSECCOOKBOOKBACKUPMUMBAI \
+    --policy-arn arn:aws:iam::135301570106:policy/S3CRR_POLICY_AWSSECCOOKBOOK_TO_AWSSECCOOKBOOKBACKUPMUMBAI \
+    --profile awssecadmin
+
+aws s3api put-bucket-replication \
+    --bucket awsseccookbook \
+    --replication-configuration file://resources/replication-configuration-another-account.json \
+    --profile awssecadmin
+
+aws s3api get-bucket-replication \
+    --bucket awsseccookbook \
+    --profile awssecadmin
+
+aws s3api put-bucket-policy \
+    --bucket awsseccookbookbackupmumbai \
+    --policy file://resources/bucket-policy-destination-bucket-another-account.json \
+    --profile awschild1admin
